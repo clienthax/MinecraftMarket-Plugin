@@ -36,7 +36,7 @@ public class Market extends JavaPlugin {
     @Getter @Setter
 	private SignUpdate signUpdate;
     @Getter @Setter
-    private String catGUIColor;
+    private String Color;
 
 	@Override
 	public void onDisable() {
@@ -83,7 +83,7 @@ public class Market extends JavaPlugin {
 		this.shopCommand = config.getString("Shop-Command", "/shop");
 		this.update = config.getBoolean("auto-update", true);
 		this.isSignEnabled = config.getBoolean("Enabled-signs", true);
-        this.catGUIColor = config.getString("Categories-GUI-Color", "&0");
+        this.Color = config.getString("Color", "&0");
 		Log.setDebugging(config.getBoolean("Debug", false));
 	}
 

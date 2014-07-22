@@ -52,9 +52,13 @@ public class Shop {
 					if (i == 0) {
 						
 						//Creating categories hub
-                        String catColorID = Settings.get().getConfig().getString("Categories-GUI-Color");
-                        Log.log(catColorID);
-                        guiHub = createInventory(ChatColor.translateAlternateColorCodes('&', catColorID + "Categories"), getInventorySize(categoryArray.length()));
+                        String colorID = Settings.get().getConfig().getString("Color");
+                        if (colorID == null) {
+                            colorID = "&0";
+                            Log.log("Could not retrieve color id from config.");
+                        }
+                        Log.log(colorID);
+                        guiHub = createInventory(ChatColor.translateAlternateColorCodes('&', colorID + "Categories"), getInventorySize(categoryArray.length()));
 						for (int cate = 0; cate < categoryArray.length(); cate++) {
 							String name = getJsonString(categoryArray, cate, "name");
 							String icon = "130";
