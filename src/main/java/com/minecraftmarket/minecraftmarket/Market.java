@@ -108,7 +108,7 @@ public class Market extends JavaPlugin {
 
 	private void startMetrics() {
 		try {
-			Metric metrics = new Metric(this);
+			MetricsLite metrics = new MetricsLite(this);
 			metrics.start();
 		} catch (IOException e) {
 			Log.log(e);
