@@ -1,0 +1,7 @@
+name: MinecraftMarket
+main: com.minecraftmarket.minecraftmarket.Market
+version: 1.8.9
+website: http://www.minecraftmarket.com
+commands:
+    mm:
+        description: MinecraftMarket main command

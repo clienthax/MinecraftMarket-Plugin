@@ -1,0 +1,29 @@
+#Minecraft Market Language file. 
+# WARNING! If you leave any option blank, it will display as "null"
+
+#==== MinecraftMarket messages ====#
+messages:
+  prefix: "&f[&2MinecraftMarket&f]"
+  no-permissions: "you do not have access to that command."
+  reload: " Configuration reloaded."
+  check: " Checking for new purchases.."
+  signs: " Updating signs.."
+  url: " Item URL: "
+  
+
+
+
+#====  In game shop ====#
+shop:
+  item: "Item: "
+  category: "Category: "
+  description: "Description: "
+  price: "Price: "
+  click-here: "*Click here to buy"
+  item-url: "Item URL: "
+  
+#====  Signs ====#
+signs:
+  no-permissions: You do not have access to create signs
+  created: Sign created and updating..
+

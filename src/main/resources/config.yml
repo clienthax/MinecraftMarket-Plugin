@@ -1,0 +1,40 @@
+    
+     # == Minecraft Market Config! == #
+   
+#Version. Do not change this
+version: '1.8.9'
+
+
+# Enable/Disable the plugin
+Enabled: true
+
+
+# APIKEY,for this server that was generated in your Minecraft Market control panel.
+ApiKey: API key here
+
+
+# interval for checking store updates
+Interval: 90
+
+
+#Enable/Disable GUI(Inventory Store)
+Enabled-GUI: true
+
+
+#Enable/Disable recent donor signs
+Enabled-signs: true
+
+
+#Shop-Command, this command will open In-Game shop. Warning: Must start with "/<command>"
+Shop-Command: /shop
+
+
+#This will update MinecraftMarket, highly recommended to keep you updated
+auto-update: true
+
+
+# Enable/Disable Debugging mode
+Debug: false
+
+#Categories GUI title color
+Categories-GUI-Color: &4
