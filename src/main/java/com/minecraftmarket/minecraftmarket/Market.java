@@ -1,11 +1,5 @@
 package com.minecraftmarket.minecraftmarket;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
-
 import com.minecraftmarket.minecraftmarket.command.CommandTask;
 import com.minecraftmarket.minecraftmarket.mcommands.Commands;
 import com.minecraftmarket.minecraftmarket.recentgui.RecentListener;
@@ -13,24 +7,36 @@ import com.minecraftmarket.minecraftmarket.shop.ShopListener;
 import com.minecraftmarket.minecraftmarket.shop.ShopTask;
 import com.minecraftmarket.minecraftmarket.signs.SignListener;
 import com.minecraftmarket.minecraftmarket.signs.SignUpdate;
-import com.minecraftmarket.minecraftmarket.util.Chat;
-import com.minecraftmarket.minecraftmarket.util.Init;
-import com.minecraftmarket.minecraftmarket.util.Log;
-import com.minecraftmarket.minecraftmarket.util.Metric;
-import com.minecraftmarket.minecraftmarket.util.Settings;
-import com.minecraftmarket.minecraftmarket.util.Update;
+import com.minecraftmarket.minecraftmarket.util.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
+import java.io.IOException;
 
 public class Market extends JavaPlugin {
+    @Getter @Setter
 	private Long interval;
+    @Getter @Setter
 	private FileConfiguration config;
+    @Getter @Setter
 	private String shopCommand;
 	private boolean update;
+    @Getter @Setter
 	private boolean isBoardEnabled;
+    @Getter @Setter
 	private boolean isSignEnabled;
+    @Getter @Setter
 	private boolean isGuiEnabled;
-	private static Market instance;
+    @Getter @Setter
+	private static Market plugin;
+    @Getter @Setter
 	private CommandTask commandTask;
+    @Getter @Setter
 	private SignUpdate signUpdate;
+    @Getter @Setter
     private String catGUIColor;
 
 	@Override
@@ -40,19 +46,14 @@ public class Market extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+        plugin = this;
 		try {
 			registerCommands();
-
 			saveDefaultSettings();
-
 			registerEvents();
-
 			reload();
-
 			startMetrics();
-
 			startTasks();
-
 		} catch (Exception e) {
 			Log.log(e);
 		}
@@ -61,21 +62,15 @@ public class Market extends JavaPlugin {
 	public void reload() {
 		try {
 			Init.start();
-
 			loadConfigOptions();
-
 			checkUpdate();
-
 			if (authApi()) {
-
 				startGUI();
-
 				startSignTasks();
 			}
 		} catch (Exception e) {
 			Log.log(e);
 		}
-
 	}
 
 	private void loadConfigOptions() {
@@ -162,75 +157,7 @@ public class Market extends JavaPlugin {
 		}
 	}
 
-	public static Market getPlugin() {
-		if (instance == null) instance = new Market();
-		return instance;
-	}
-
-	public Long getInterval() {
-		return interval;
-	}
-
-	public void setInterval(Long interval) {
-		this.interval = interval;
-	}
-
-	public void setConfig(FileConfiguration config) {
-		this.config = config;
-	}
-
-	public boolean isGuiEnabled() {
-		return isGuiEnabled;
-	}
-
-	public File getPluginFile() {
-		return this.getFile();
-	}
-
-	public void setGuiEnabled(boolean guiEnabled) {
-		this.isGuiEnabled = guiEnabled;
-	}
-
-	public String getShopCommand() {
-		return shopCommand;
-	}
-
-	public void setShopCommand(String shopCommand) {
-		this.shopCommand = shopCommand;
-	}
-
-	public boolean isUpdate() {
-		return update;
-	}
-
-	public void setUpdate(boolean update) {
-		this.update = update;
-	}
-
-	public Market() {
-		instance = this;
-	}
-
-	public boolean isBoard() {
-		return isBoardEnabled;
-	}
-
-	public void setIsBoard(boolean isBoard) {
-		this.isBoardEnabled = isBoard;
-	}
-
-	public boolean isSignEnabled() {
-		return isSignEnabled;
-	}
-
-	public void setSignEnabled(boolean isSignEnabled) {
-		this.isSignEnabled = isSignEnabled;
-	}
-
-	public CommandTask getCommandTask() {
-		return commandTask;
-	}
-
-    public String setGUICatColor() {return catGUIColor; }
-
+    public File getPluginFile() {
+        return this.getFile();
+    }
 }
