@@ -21,8 +21,6 @@ public class Market extends JavaPlugin {
     @Getter @Setter
 	private Long interval;
     @Getter @Setter
-	private FileConfiguration config;
-    @Getter @Setter
 	private String shopCommand;
 	private boolean update;
     @Getter @Setter
@@ -78,8 +76,8 @@ public class Market extends JavaPlugin {
 
 	private void loadConfigOptions() {
 		Chat.get().SetupDefaultLanguage();
-		config = Settings.get().getConfig();
-		Api.setApi(config.getString("ApiKey", "Apikey here"));
+        FileConfiguration config = this.getConfig();
+        Api.setApi(config.getString("ApiKey", "Apikey here"));
 		this.interval = Math.max(config.getLong("Interval", 90L), 10L);
 		this.isGuiEnabled = config.getBoolean("Enabled-GUI", true);
 		this.shopCommand = config.getString("Shop-Command", "/shop");

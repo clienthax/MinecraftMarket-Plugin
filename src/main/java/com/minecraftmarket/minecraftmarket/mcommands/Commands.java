@@ -51,7 +51,7 @@ public class Commands implements CommandExecutor {
 					return true;
 				} catch (Exception e) {
 					sender.sendMessage(Chat.get().prefix + ChatColor.RED + " An error has occurred, use \"/mm help\" to view help");
-					Log.log(e);
+					e.printStackTrace();
 					return true;
 				}
 			}

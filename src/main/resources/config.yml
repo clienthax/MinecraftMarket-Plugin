@@ -33,4 +33,4 @@ auto-update: true
 Debug: false
 
 #Categories GUI title color
-Categories-GUI-Color: &4
+Categories-GUI-Color: &0
