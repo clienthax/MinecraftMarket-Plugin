@@ -66,7 +66,7 @@ public class Market extends JavaPlugin {
             Settings.get().reloadLanguageConfig();
 			loadConfigOptions();
             if (update)
-                new Updater(this, 64572, this.getFile(), Updater.UpdateType.DEFAULT, false);
+                new Updater(this, 64572, this.getFile(), Updater.UpdateType.NO_DOWNLOAD, false);
 			if (authApi()) {
 				startGUI();
 				startSignTasks();
