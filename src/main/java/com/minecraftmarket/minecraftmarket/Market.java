@@ -10,6 +10,7 @@ import com.minecraftmarket.minecraftmarket.signs.SignUpdate;
 import com.minecraftmarket.minecraftmarket.util.*;
 import lombok.Getter;
 import lombok.Setter;
+import net.gravitydevelopment.updater.Updater;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -61,9 +62,11 @@ public class Market extends JavaPlugin {
 
 	public void reload() {
 		try {
-			Init.start();
+            Settings.get().reloadConfig();
+            Settings.get().reloadLanguageConfig();
 			loadConfigOptions();
-			checkUpdate();
+            if (update)
+                new Updater(this, 64572, this.getFile(), Updater.UpdateType.DEFAULT, false);
 			if (authApi()) {
 				startGUI();
 				startSignTasks();
@@ -140,12 +143,6 @@ public class Market extends JavaPlugin {
 
 	private void saveDefaultSettings() {
 		Settings.get().LoadSettings();
-	}
-
-	private void checkUpdate() {
-		if (update) {
-			new Update();
-		}
 	}
 
 	private void stopTasks() {

@@ -1,9 +1,5 @@
     
      # == Minecraft Market Config! == #
-   
-#Version. Do not change this
-version: '1.8.9'
-
 
 # Enable/Disable the plugin
 Enabled: true
