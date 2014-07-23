@@ -1,12 +1,11 @@
 package com.minecraftmarket.minecraftmarket.util;
 
-import java.io.File;
-import java.io.IOException;
-
+import com.minecraftmarket.minecraftmarket.Market;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import com.minecraftmarket.minecraftmarket.Market;
+import java.io.File;
+import java.io.IOException;
 
 public class Settings {
 

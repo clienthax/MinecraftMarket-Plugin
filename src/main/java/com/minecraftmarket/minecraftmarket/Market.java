@@ -7,12 +7,15 @@ import com.minecraftmarket.minecraftmarket.shop.ShopListener;
 import com.minecraftmarket.minecraftmarket.shop.ShopTask;
 import com.minecraftmarket.minecraftmarket.signs.SignListener;
 import com.minecraftmarket.minecraftmarket.signs.SignUpdate;
-import com.minecraftmarket.minecraftmarket.util.*;
+import com.minecraftmarket.minecraftmarket.util.Chat;
+import com.minecraftmarket.minecraftmarket.util.Log;
+import com.minecraftmarket.minecraftmarket.util.Settings;
 import lombok.Getter;
 import lombok.Setter;
 import net.gravitydevelopment.updater.Updater;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.mcstats.MetricsLite;
 
 import java.io.File;
 import java.io.IOException;
