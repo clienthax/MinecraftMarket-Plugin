@@ -1,7 +1,12 @@
 package com.minecraftmarket.minecraftmarket.shop;
 
-import java.util.Arrays;
-
+import com.minecraftmarket.minecraftmarket.Api;
+import com.minecraftmarket.minecraftmarket.Market;
+import com.minecraftmarket.minecraftmarket.json.JSONArray;
+import com.minecraftmarket.minecraftmarket.json.JSONException;
+import com.minecraftmarket.minecraftmarket.json.JSONObject;
+import com.minecraftmarket.minecraftmarket.util.Json;
+import com.minecraftmarket.minecraftmarket.util.Log;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -9,14 +14,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import com.minecraftmarket.minecraftmarket.json.JSONArray;
-import com.minecraftmarket.minecraftmarket.json.JSONException;
-import com.minecraftmarket.minecraftmarket.json.JSONObject;
 
-import com.minecraftmarket.minecraftmarket.Api;
-import com.minecraftmarket.minecraftmarket.util.Json;
-import com.minecraftmarket.minecraftmarket.util.Log;
-import com.minecraftmarket.minecraftmarket.util.Settings;
+import java.util.Arrays;
 
 public class Shop {
 	static Shop instance;
@@ -52,7 +51,7 @@ public class Shop {
 					if (i == 0) {
 						
 						//Creating categories hub
-                        String colorID = Settings.get().getConfig().getString("Color");
+                        String colorID = Market.getPlugin().getColor();
                         if (colorID == null) {
                             colorID = "&0";
                             Log.log("Could not retrieve color id from config.");
