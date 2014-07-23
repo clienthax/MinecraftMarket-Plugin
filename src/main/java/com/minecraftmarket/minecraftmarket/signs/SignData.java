@@ -1,7 +1,9 @@
 package com.minecraftmarket.minecraftmarket.signs;
 
-import java.util.List;
-
+import com.google.common.collect.Lists;
+import com.minecraftmarket.minecraftmarket.json.JSONException;
+import com.minecraftmarket.minecraftmarket.util.Log;
+import com.minecraftmarket.minecraftmarket.util.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -10,13 +12,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.block.Skull;
-import org.bukkit.scheduler.BukkitRunnable;
-import com.minecraftmarket.minecraftmarket.json.JSONException;
 
-import com.google.common.collect.Lists;
-import com.minecraftmarket.minecraftmarket.Market;
-import com.minecraftmarket.minecraftmarket.util.Log;
-import com.minecraftmarket.minecraftmarket.util.Settings;
+import java.util.List;
 
 public class SignData {
 
@@ -60,8 +57,19 @@ public class SignData {
 	}
 
 	public void update() {
-		UpdateAsync async = new UpdateAsync();
-		async.runTaskAsynchronously(Market.getPlugin());
+        try {
+            updateJson();
+            sign.setLine(0, ChatColor.UNDERLINE + "Recent Donor");
+            sign.setLine(1, username);
+            sign.setLine(2, item);
+            sign.setLine(3, date);
+            sign.update();
+            updateHead();
+        } catch (JSONException e) {
+            notFound();
+        } catch (Exception e) {
+            Log.log(e);
+        }
 	}
 
 	public void updateJson() throws JSONException {
@@ -174,25 +182,4 @@ public class SignData {
 		}
 		return null;
 	}
-
-	private class UpdateAsync extends BukkitRunnable {
-
-		@Override
-		public void run() {
-			try {
-				updateJson();
-				sign.setLine(0, ChatColor.UNDERLINE + "Recent Donor");
-				sign.setLine(1, username);
-				sign.setLine(2, item);
-				sign.setLine(3, date);
-				sign.update();
-				updateHead();
-			} catch (JSONException e) {
-				notFound();
-			} catch (Exception e) {
-				Log.log(e);
-			}
-		}
-	}
-
 }
