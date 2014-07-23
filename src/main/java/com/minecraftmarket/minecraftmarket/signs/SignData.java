@@ -2,7 +2,6 @@ package com.minecraftmarket.minecraftmarket.signs;
 
 import com.google.common.collect.Lists;
 import com.minecraftmarket.minecraftmarket.json.JSONException;
-import com.minecraftmarket.minecraftmarket.util.Log;
 import com.minecraftmarket.minecraftmarket.util.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -63,12 +62,10 @@ public class SignData {
             sign.setLine(1, username);
             sign.setLine(2, item);
             sign.setLine(3, date);
-            sign.update();
+            sign.update(true, true);
             updateHead();
-        } catch (JSONException e) {
-            notFound();
         } catch (Exception e) {
-            Log.log(e);
+            e.printStackTrace();
         }
 	}
 
