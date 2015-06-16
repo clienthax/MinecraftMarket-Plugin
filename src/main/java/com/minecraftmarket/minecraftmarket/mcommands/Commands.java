@@ -12,7 +12,6 @@ import org.bukkit.command.CommandSender;
 import com.google.common.collect.Lists;
 import com.minecraftmarket.minecraftmarket.Market;
 import com.minecraftmarket.minecraftmarket.util.Chat;
-import com.minecraftmarket.minecraftmarket.util.Log;
 
 public class Commands implements CommandExecutor {
 
