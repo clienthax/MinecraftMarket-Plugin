@@ -3,12 +3,12 @@
 
 #==== MinecraftMarket messages ====#
 messages:
-  prefix: "&f[&2MinecraftMarket&f]"
+  prefix: "&f[&2MinecraftMarket&f] "
   no-permissions: "you do not have access to that command."
-  reload: " Configuration reloaded."
-  check: " Checking for new purchases.."
-  signs: " Updating signs.."
-  url: " Item URL: "
+  reload: "Configuration reloaded."
+  check: "Checking for new purchases.."
+  signs: "Updating signs.."
+  url: "Item URL: "
   
 
 
@@ -21,9 +21,13 @@ shop:
   price: "Price: "
   click-here: "*Click here to buy"
   item-url: "Item URL: "
+  open-category: "*Click here to open <category> category"
+  back-to-category: "Back to categories"
+  back-to-category-desc: "*Click here go back to categories"
   
 #====  Signs ====#
 signs:
+  header: Recent Donor
   no-permissions: You do not have access to create signs
+  id-invalid: Can't update sign - ID on line 2 invalid.
   created: Sign created and updating..
-

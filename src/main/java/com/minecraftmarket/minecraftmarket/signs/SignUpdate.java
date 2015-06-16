@@ -32,7 +32,6 @@ public class SignUpdate extends BukkitRunnable {
 
 		@Override
 		public void run() {
-			// TODO Auto-generated method stub
 			
 		}
 		

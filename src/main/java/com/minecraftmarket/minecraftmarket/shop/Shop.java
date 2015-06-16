@@ -5,8 +5,10 @@ import com.minecraftmarket.minecraftmarket.Market;
 import com.minecraftmarket.minecraftmarket.json.JSONArray;
 import com.minecraftmarket.minecraftmarket.json.JSONException;
 import com.minecraftmarket.minecraftmarket.json.JSONObject;
+import com.minecraftmarket.minecraftmarket.util.Chat;
 import com.minecraftmarket.minecraftmarket.util.Json;
 import com.minecraftmarket.minecraftmarket.util.Log;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -42,6 +44,7 @@ public class Shop {
 			clearCache();
 			String gui = Json.getJSON(Api.getUrl() + "/gui");
 			Log.response("GUI", gui);
+			
 			if (Json.isJson(gui)) {
 				JSONObject json = new JSONObject(gui);
 				JSONArray itemArray = json.optJSONArray("result");
@@ -161,8 +164,8 @@ public class Shop {
 	private ItemStack createCategoryPage() {
 		ItemStack item = new ItemStack(Material.IRON_FENCE, 1);
 		ItemMeta im = item.getItemMeta();
-		im.setDisplayName(ChatColor.GOLD + "Back to categories");
-		im.setLore(Arrays.asList("", "*Click here go back to categories"));
+		im.setDisplayName(ChatColor.GOLD + getMsg("shop.back-to-category"));
+		im.setLore(Arrays.asList("", getMsg("shop.back-to-category-desc")));
 		item.setItemMeta(im);
 		return item;
 	}
@@ -187,7 +190,7 @@ public class Shop {
 		ItemStack item = new ItemStack(id, 1, (short) 0, data);
 		ItemMeta im = item.getItemMeta();
 		im.setDisplayName(ChatColor.GOLD + name);
-		im.setLore(Arrays.asList("", "*Click here to open " + name + " category"));
+		im.setLore(Arrays.asList("", getMsg("shop.open-category").replace("<category>", name)));
 		item.setItemMeta(im);
 		return item;
 	}
@@ -205,6 +208,10 @@ public class Shop {
 	public static Shop getInstance() {
 		if (instance == null) instance = new Shop();
 		return instance;
+	}
+	
+	private String getMsg(String string) {
+		return Chat.get().getLanguage().getString(string);
 	}
 
 	private Shop() {

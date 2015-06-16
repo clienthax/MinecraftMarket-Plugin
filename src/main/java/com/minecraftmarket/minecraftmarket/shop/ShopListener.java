@@ -21,7 +21,7 @@ public class ShopListener implements Listener {
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
 		try {
-			if (event.getInventory().getName().contains("Category: ") || event.getInventory().getName().equals("Categories")) {
+			if (event.getInventory().getTitle().contains("Category: ") || event.getInventory().getTitle().contains("Categories")) {
 				event.setCancelled(true);
 				if (event.getCurrentItem() == null) {
 					event.setCancelled(true);
@@ -32,15 +32,17 @@ public class ShopListener implements Listener {
 					return;
 				}
 			}
-			if (event.getInventory().getName().contains("Category: ")) {
+			if (event.getInventory().getTitle().contains("Category: ")) {
 				Player player = (Player) event.getWhoClicked();
 				String name = event.getCurrentItem().getItemMeta().getDisplayName();
-				if (name.contains("Back to categories")) {
-					event.setCancelled(true);
+				
+				if (name.contains(getMsg("shop.back-to-category"))) {
 					event.getWhoClicked().closeInventory();
 					gui.showCategories((Player) event.getWhoClicked());
+					event.setCancelled(true);
 					return;
 				}
+				
 				String[] id = name.split(": ");
 				int id1 = Integer.parseInt(id[1]);
 				String url = ShopPackage.getById(id1).getUrl();
@@ -49,14 +51,14 @@ public class ShopListener implements Listener {
 				event.setCancelled(true);
 				return;
 			}
-			if (event.getInventory().getName().equals("Categories")) {
+			if (event.getInventory().getTitle().contains("Categories")) {
 				int num = ShopCategory.getCategoryBySlot(event.getSlot()).getID();
-				event.setCancelled(true);
 				event.getWhoClicked().closeInventory();
 				gui.showGui((Player) event.getWhoClicked(), num);
+				event.setCancelled(true);
 			}
+			
 		} catch (Exception e1) {
-
 		}
 	}
 

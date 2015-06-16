@@ -6,9 +6,9 @@ import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
+
 import com.minecraftmarket.minecraftmarket.json.JSONArray;
 import com.minecraftmarket.minecraftmarket.json.JSONObject;
-
 import com.minecraftmarket.minecraftmarket.Api;
 import com.minecraftmarket.minecraftmarket.Market;
 import com.minecraftmarket.minecraftmarket.util.Json;
@@ -37,7 +37,7 @@ public class Signs implements Listener {
 	}
 	
 	public void setup(){
-		for (String signInfo: Settings.get().getSignDatabase().getStringList("recent")) {
+		for (String signInfo : Settings.get().getSignDatabase().getStringList("recent")) {
 			new SignData(convertLocation(signInfo), getNumber(signInfo));
 		}
 	}

@@ -1,8 +1,11 @@
 package com.minecraftmarket.minecraftmarket.signs;
 
 import com.google.common.collect.Lists;
+import com.minecraftmarket.minecraftmarket.Market;
 import com.minecraftmarket.minecraftmarket.json.JSONException;
+import com.minecraftmarket.minecraftmarket.util.Chat;
 import com.minecraftmarket.minecraftmarket.util.Settings;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -47,7 +50,10 @@ public class SignData {
 		if (isSign()) {
 			saveAllToConfig();
 			this.sign = (Sign) block.getState();
-			update();
+			try {
+				update();
+			} catch (JSONException e) {
+			}
 		}
 	}
 
@@ -55,25 +61,24 @@ public class SignData {
 		return this.sign;
 	}
 
-	public void update() {
-        try {
-            updateJson();
-            sign.setLine(0, ChatColor.UNDERLINE + "Recent Donor");
-            sign.setLine(1, username);
-            sign.setLine(2, item);
-            sign.setLine(3, date);
-            sign.update(true, true);
-            updateHead();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-	}
-
-	public void updateJson() throws JSONException {
+	public void update() throws JSONException {
 		this.username = Signs.getJsonArray().getJSONObject(number).getString("username");
 		this.item = Signs.getJsonArray().getJSONObject(number).getString("item");
 		this.date = Signs.getJsonArray().getJSONObject(number).getString("date");
 		this.date = date.split(" ")[0];
+
+		sign.setLine(0, ChatColor.UNDERLINE + getMsg("signs.header"));
+		sign.setLine(1, username);
+		sign.setLine(2, item);
+		sign.setLine(3, date);
+		Bukkit.getScheduler().scheduleSyncDelayedTask(Market.getPlugin(), new Runnable(){
+			public void run(){
+				sign.update();
+				//Just encase
+				sign.update(true, true);
+			}
+		}, 20L);
+		updateHead();
 	}
 
 	public void notFound() {
@@ -112,11 +117,20 @@ public class SignData {
 	public static void updateAllSigns() {
 		List<SignData> toRemove = Lists.newArrayList();
 		for (SignData sd : signs) {
-			if (sd.isSign()) {
-				sd.update();
-			} else {
+			//if(sd.getLocation().getBlock().getType() == Material.SIGN || sd.getLocation().getBlock().getType() == Material.WALL_SIGN){
+				if (sd.isSign()) {
+					try {
+						sd.update();
+					} catch (JSONException e) {
+					}
+				} else {
+					toRemove.add(sd);
+				}
+			/*}else{
+				Bukkit.broadcastMessage(Chat.get().prefix + "Found invalid sign! Removing!");
+				sd.getLocation().getBlock().setType(Material.AIR);
 				toRemove.add(sd);
-			}
+			}*/
 		}
 		for (SignData sd : toRemove) {
 			sd.remove();
@@ -179,4 +193,9 @@ public class SignData {
 		}
 		return null;
 	}
+
+	private String getMsg(String string) {
+		return Chat.get().getLanguage().getString(string);
+	}
+
 }
