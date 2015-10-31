@@ -92,7 +92,7 @@ public class SignListener {
 			Player player = event.getCause().first(Player.class).get();
 			SignData sign = SignData.getSignByLocation(event.getTransactions().get(0).getFinal().getLocation().get());
 			if (sign != null) {
-				if (player.hasPermission("signs.remove")) {
+				if (player.hasPermission("minecraftmarket.admin")) {
 					sign.remove();
 					player.sendMessage(Texts.of(chat.prefix, TextColors.RED, "Sign removed"));
 				} else {
