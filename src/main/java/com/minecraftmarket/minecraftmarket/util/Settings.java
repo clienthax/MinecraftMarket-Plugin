@@ -1,107 +1,104 @@
 package com.minecraftmarket.minecraftmarket.util;
 
 import com.minecraftmarket.minecraftmarket.Market;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
+import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.loader.ConfigurationLoader;
+import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 public class Settings {
 
 	private static Settings instance;
-	private File signFile;
-	private File languageFile;
-	private FileConfiguration language;
-	private FileConfiguration sign;
-
-	private Market plugin = Market.getPlugin();
+	private ConfigurationLoader<ConfigurationNode> mainFile;
+	private ConfigurationLoader<ConfigurationNode> signFile;
+	private ConfigurationLoader<ConfigurationNode> languageFile;
+	private ConfigurationNode mainConfig;
+	private ConfigurationNode languageConfig;
+	private ConfigurationNode signConfig;
 
 	public void LoadSettings() {
-		signFile = new File(Market.getPlugin().getDataFolder(), "signs.yml");
-		languageFile = new File(Market.getPlugin().getDataFolder(), "language.yml");
 
-		Market.getPlugin().saveDefaultConfig();
-		CreateFile("signs.yml", signFile, false, true);
-		CreateFile("language.yml", languageFile, false, true);
+		mainFile = YAMLConfigurationLoader.builder().setFile(new File(Market.getPlugin().getDataFolder(), "config.yml")).build();
+		signFile = YAMLConfigurationLoader.builder().setFile(new File(Market.getPlugin().getDataFolder(), "signs.yml")).build();
+		languageFile = YAMLConfigurationLoader.builder().setFile(new File(Market.getPlugin().getDataFolder(), "language.yml")).build();
 
-		reloadConfig();
+		reloadMainConfig();
 		reloadSignDatabase();
 		reloadLanguageConfig();
 
 	}
 
-	public void saveConfig() {
-		Market.getPlugin().saveConfig();
+	public void saveMainConfig() {
+		try {
+			mainFile.save(mainConfig);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void saveAll() {
 		try {
-			Market.getPlugin().saveConfig();
-			sign.save(signFile);
-			language.save(languageFile);
+			mainFile.save(mainConfig);
+			signFile.save(signConfig);
+			languageFile.save(languageConfig);
 		} catch (IOException e) {
+			e.printStackTrace();
 			Log.log(e);
 		}
 	}
 
 	public void saveSignDatabase() {
 		try {
-			sign.save(signFile);
+			signFile.save(signConfig);
 		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
 	public void saveLanguageFile() {
 		try {
-			language.save(languageFile);
+			languageFile.save(languageConfig);
 		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
-	public FileConfiguration getConfig() {
-		return Market.getPlugin().getConfig();
+	public ConfigurationNode getMainConfig() {
+		return mainConfig;
 	}
 
-	public FileConfiguration getSignDatabase() {
-		return sign;
+	public ConfigurationNode getSignDatabase() {
+		return signConfig;
 	}
 
-	public FileConfiguration getLanguageFile() {
-		return language;
+	public ConfigurationNode getLanguageFile() {
+		return languageConfig;
 	}
 
-	public void reloadConfig() {
-		Market.getPlugin().reloadConfig();
+	public void reloadMainConfig() {
+		try {
+			mainConfig = mainFile.load();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void reloadSignDatabase() {
-		sign = YamlConfiguration.loadConfiguration(signFile);
+		try {
+			signConfig = signFile.load();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void reloadLanguageConfig() {
-		language = YamlConfiguration.loadConfiguration(languageFile);
-	}
-
-	private void CreateFile(String fileName, File file, boolean replace, boolean copyFromLib) {
 		try {
-			if (copyFromLib) {
-				if (!replace && file.exists()) return;
-				plugin.saveResource(fileName, replace);
-				return;
-			}
-			if (file.exists()) {
-				if (replace) {
-					file.createNewFile();
-					return;
-				}
-				return;
-			}
-			file.createNewFile();
-
-		} catch (IOException e) {
-			Market.getPlugin().getLogger().warning("Failed to create " + fileName);
-			Log.log(e);
+			languageConfig = languageFile.load();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

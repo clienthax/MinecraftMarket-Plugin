@@ -1,10 +1,8 @@
 package com.minecraftmarket.minecraftmarket.recentgui;
 
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-
 import com.minecraftmarket.minecraftmarket.Market;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.item.inventory.Inventory;
 
 public class RecentGUI {
 
@@ -13,9 +11,10 @@ public class RecentGUI {
 
 	public RecentGUI(Player player) {
 		this.player = player;
-		inv = Bukkit.createInventory(null, 18, "Recent Donors");
+//TODO
+//		inv = Bukkit.createInventory(null, 18, "Recent Donors");
 		RecentTask task = new RecentTask(inv);
-		task.runTaskAsynchronously(Market.getPlugin());
+		Market.getPlugin().getGame().getScheduler().createTaskBuilder().async().execute(task).submit(Market.getPlugin());
 		player.openInventory(inv);
 	}
 

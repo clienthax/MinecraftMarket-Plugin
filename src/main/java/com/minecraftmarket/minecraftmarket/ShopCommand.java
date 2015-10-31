@@ -1,21 +1,23 @@
 package com.minecraftmarket.minecraftmarket;
 
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.command.SendCommandEvent;
 
-import com.minecraftmarket.minecraftmarket.shop.Shop;
+import java.util.Optional;
 
-public class ShopCommand implements Listener {
+public class ShopCommand {
 
-	@EventHandler
-	public void onStoreCommand(PlayerCommandPreprocessEvent event) {
-		if (event.getMessage().equalsIgnoreCase(Market.getPlugin().getShopCommand())) {
+	@Listener
+	public void onStoreCommand(SendCommandEvent event) {
+		Optional<Player> playerOptional = event.getCause().first(Player.class);
+		if(playerOptional.isPresent() && event.getCommand().equalsIgnoreCase(Market.getPlugin().getShopCommand().replace("/",""))) {
 			event.setCancelled(true);
 			if (!Market.getPlugin().isGuiEnabled()) {
 				return;
 			} else {
-				Shop.getInstance().showCategories(event.getPlayer());
+				//TODO
+				// Shop.getInstance().showCategories(playerOptional.get());
 				return;
 			}
 		}

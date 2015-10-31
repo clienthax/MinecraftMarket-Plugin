@@ -1,9 +1,9 @@
 package com.minecraftmarket.minecraftmarket.mcommands;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import com.minecraftmarket.minecraftmarket.recentgui.RecentGUI;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.util.command.CommandSource;
 
 public class Recent extends MarketCommand {
 
@@ -12,7 +12,7 @@ public class Recent extends MarketCommand {
 	}
 
 	@Override
-	public void run(CommandSender sender, String[] args) {
+	public void run(CommandSource sender, String[] args) {
 		if (sender instanceof Player) {
 			new RecentGUI((Player) sender);
 		}

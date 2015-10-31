@@ -1,10 +1,11 @@
 package com.minecraftmarket.minecraftmarket.recentgui;
 
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
+import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.property.SlotIndex;
+import org.spongepowered.api.item.inventory.type.OrderedInventory;
 
-public class RecentTask extends BukkitRunnable {
+public class RecentTask implements Runnable {
 
 	Inventory inv;
 
@@ -17,7 +18,7 @@ public class RecentTask extends BukkitRunnable {
 		for (int i = 0; i < 18; i++) {
 			ItemStack item = util.get(i);
 			if (item != null) {
-				this.inv.setItem(i, item);
+				((OrderedInventory)inv).set(SlotIndex.of(i), item);
 			}
 		}
 	}

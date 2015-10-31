@@ -3,17 +3,21 @@ package com.minecraftmarket.minecraftmarket.mcommands;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
+import java.util.Optional;
 
 import com.google.common.collect.Lists;
 import com.minecraftmarket.minecraftmarket.Market;
 import com.minecraftmarket.minecraftmarket.util.Chat;
+import ninja.leaping.configurate.ConfigurationNode;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.util.command.CommandCallable;
+import org.spongepowered.api.util.command.CommandException;
+import org.spongepowered.api.util.command.CommandResult;
+import org.spongepowered.api.util.command.CommandSource;
 
-public class Commands implements CommandExecutor {
+public class Commands implements CommandCallable {
 
 	private static List<MarketCommand> commands = Lists.newArrayList();
 
@@ -27,7 +31,16 @@ public class Commands implements CommandExecutor {
 	}
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+	public CommandResult process(CommandSource source, String arguments) throws CommandException {
+		String[] split = arguments.split(" ");
+		if(split.length == 1 && split[0].equals(""))
+			split = new String[0];
+		onCommand(source, split);
+
+		return CommandResult.empty();
+	}
+
+	public boolean onCommand(CommandSource sender, String[] args) {
 		if (args.length == 0) {
 			sendHelp(sender);
 			return true;
@@ -36,48 +49,76 @@ public class Commands implements CommandExecutor {
 			sendHelp(sender);
 			return true;
 		}
-		ArrayList<String> a = new ArrayList<String>(Arrays.asList(args));
+		ArrayList<String> a = new ArrayList<>(Arrays.asList(args));
 		a.remove(0);
 
 		for (MarketCommand mc : commands) {
 			if (mc.getCommand().equalsIgnoreCase(args[0])) {
 				if (!sender.hasPermission(mc.getPermission())) {
-					sendMSG(sender, ChatColor.DARK_RED + getMsg("messages.no-permissions"));
+					sendMSG(sender, TextColors.DARK_RED, getMsg("messages", "no-permissions"));
 					return true;
 				}
 				try {
 					mc.run(sender, a.toArray(new String[a.size()]));
 					return true;
 				} catch (Exception e) {
-					sender.sendMessage(Chat.get().prefix + ChatColor.RED + " An error has occurred, use \"/mm help\" to view help");
+					sendMSG(sender, Chat.get().prefix, TextColors.RED, " An error has occurred, use \"/mm help\" to view help");
 					e.printStackTrace();
 					return true;
 				}
 			}
 
 		}
-		sendMSG(sender, ChatColor.RED + "Unknown command! use \"/mm help\" to view help");
+		sendMSG(sender, TextColors.RED, "Unknown command! use \"/mm help\" to view help");
 		return true;
 	}
 
-	private void sendMSG(CommandSender sender, String msg) {
-		sender.sendMessage(msg);
+	private void sendMSG(CommandSource sender, Object... msgs) {
+		sender.sendMessage(Texts.of(msgs));
 	}
 
-	private void sendHelp(CommandSender sender) {
-		sendMSG(sender, ChatColor.WHITE + "---------------- " + ChatColor.DARK_GREEN + "MinecraftMarket Help " + ChatColor.WHITE + "-----------------");
-		sendMSG(sender, ChatColor.GOLD + Market.getPlugin().getShopCommand() + " - " + ChatColor.WHITE + "Show In-Game market to player");
+	private void sendHelp(CommandSource sender) {
+		sendMSG(sender, TextColors.WHITE,"---------------- ",TextColors.DARK_GREEN,"MinecraftMarket Help ",TextColors.WHITE,"-----------------");
+		sendMSG(sender, TextColors.GOLD, Market.getPlugin().getShopCommand(), " - ", TextColors.WHITE, "Show In-Game market to player");
 		for (MarketCommand mc : commands) {
-			if (mc.getPermission() != "" || sender.hasPermission(mc.getPermission())) {
-				sendMSG(sender, ChatColor.GOLD + "/MM " + mc.getCommand() + " " + mc.getArgs() + " - " + ChatColor.WHITE + mc.getDescription());
-
+			if (!mc.getPermission().equals("") && sender.hasPermission(mc.getPermission())) {
+				sendMSG(sender, TextColors.GOLD, "/MM " + mc.getCommand() + " " + mc.getArgs() + " - ", TextColors.WHITE, mc.getDescription());
 			}
 		}
-		sendMSG(sender, ChatColor.WHITE + "----------------------------------------------------");
+		sendMSG(sender, TextColors.WHITE, "----------------------------------------------------");
 	}
 
-	private String getMsg(String string) {
-		return Chat.get().getLanguage().getString(string);
+	private String getMsg(String... string) {
+		ConfigurationNode node = Chat.get().getLanguage();
+		for(String subnode : string) {
+			node = node.getNode(subnode);
+		}
+		return node.getString();
+	}
+
+	@Override
+	public List<String> getSuggestions(CommandSource source, String arguments) throws CommandException {
+		return new ArrayList<>();
+	}
+
+	@Override
+	public boolean testPermission(CommandSource source) {
+		return true;
+	}
+
+	@Override
+	public Optional<? extends Text> getShortDescription(CommandSource source) {
+		return Optional.empty();
+	}
+
+	@Override
+	public Optional<? extends Text> getHelp(CommandSource source) {
+		return Optional.empty();
+	}
+
+	@Override
+	public Text getUsage(CommandSource source) {
+		return Texts.of("/mm");
 	}
 
 }

@@ -2,9 +2,8 @@ package com.minecraftmarket.minecraftmarket.shop;
 
 import java.util.List;
 
-import org.bukkit.inventory.Inventory;
-
 import com.google.common.collect.Lists;
+import org.spongepowered.api.item.inventory.Inventory;
 
 public class ShopCategory {
 

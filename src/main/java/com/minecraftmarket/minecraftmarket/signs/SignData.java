@@ -5,32 +5,34 @@ import com.minecraftmarket.minecraftmarket.Market;
 import com.minecraftmarket.minecraftmarket.json.JSONException;
 import com.minecraftmarket.minecraftmarket.util.Chat;
 import com.minecraftmarket.minecraftmarket.util.Settings;
+import org.spongepowered.api.GameProfile;
+import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.data.DataContainer;
+import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.value.mutable.ListValue;
+import org.spongepowered.api.service.user.UserStorage;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.format.TextStyles;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
-import org.bukkit.block.Skull;
-
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.regex.Pattern;
 
 public class SignData {
 
 	private static List<SignData> signs = Lists.newArrayList();
-	private Location location;
-	private Sign sign;
+	private Location<World> location;
 	private Integer number;
 	private String date;
-	private Block block;
 	private String username;
 	private String item; // Package name
 
-	public SignData(Location location, int number) {
+	public SignData(Location<World> location, int number) {
 		this.location = location;
-		this.block = location.getBlock();
 		this.number = number;
 		create();
 	}
@@ -49,16 +51,11 @@ public class SignData {
 		signs.add(this);
 		if (isSign()) {
 			saveAllToConfig();
-			this.sign = (Sign) block.getState();
 			try {
 				update();
 			} catch (JSONException e) {
 			}
 		}
-	}
-
-	public Sign getSign() {
-		return this.sign;
 	}
 
 	public void update() throws JSONException {
@@ -67,34 +64,21 @@ public class SignData {
 		this.date = Signs.getJsonArray().getJSONObject(number).getString("date");
 		this.date = date.split(" ")[0];
 
-		sign.setLine(0, ChatColor.UNDERLINE + getMsg("signs.header"));
-		sign.setLine(1, username);
-		sign.setLine(2, item);
-		sign.setLine(3, date);
-		Bukkit.getScheduler().scheduleSyncDelayedTask(Market.getPlugin(), new Runnable(){
-			public void run(){
-				sign.update();
-				//Just encase
-				sign.update(true, true);
-			}
-		}, 20L);
+		Text[] texts = {Texts.of(TextStyles.UNDERLINE, getMsg("signs.header")), Texts.of(username), Texts.of(item), Texts.of(date) };
+		ArrayList<Text> list = Lists.newArrayList(texts);
+		getLocation().offer(Keys.SIGN_LINES, list);
 		updateHead();
 	}
 
-	public void notFound() {
-		sign.setLine(1, ChatColor.DARK_RED + "Not Found.");
-		sign.update();
-	}
-
 	public boolean isSign() {
-		return this.block.getState() instanceof Sign;
+		return this.location.getBlockType() == BlockTypes.STANDING_SIGN || this.getLocation().getBlockType() == BlockTypes.WALL_SIGN;
 	}
 
 	public void updateHead() {
-		Skull skull = getSkull(block);
-		if (skull != null) {
-			skull.setOwner(this.username);
-			skull.update();
+		Optional<Location<World>> skullLocation = getSkull();
+		if (skullLocation.isPresent()) {
+			GameProfile owner = Market.getPlugin().getGame().getServiceManager().provide(UserStorage.class).get().get(username).get().getProfile();
+			skullLocation.get().offer(Keys.REPRESENTED_PLAYER, owner);
 		}
 	}
 
@@ -106,44 +90,30 @@ public class SignData {
 	public static void saveAllToConfig() {
 		List<String> listSigns = Lists.newArrayList();
 		for (SignData sd : signs) {
-			Location loc = sd.getLocation();
-			String str = loc.getWorld().getName() + ":" + loc.getBlockX() + ":" + loc.getBlockY() + ":" + loc.getBlockZ() + ":" + sd.getNumber();
+			Location<World> loc = sd.getLocation();
+			String str = loc.getExtent().getUniqueId() + ":" + loc.getBlockX() + ":" + loc.getBlockY() + ":" + loc.getBlockZ() + ":" + sd.getNumber();
 			listSigns.add(str);
 		}
-		Settings.get().getSignDatabase().set("recent", listSigns);
+		Settings.get().getSignDatabase().getNode("recent").setValue(listSigns);
 		Settings.get().saveSignDatabase();
 	}
 
 	public static void updateAllSigns() {
 		List<SignData> toRemove = Lists.newArrayList();
 		for (SignData sd : signs) {
-			//if(sd.getLocation().getBlock().getType() == Material.SIGN || sd.getLocation().getBlock().getType() == Material.WALL_SIGN){
 				if (sd.isSign()) {
 					try {
 						sd.update();
 					} catch (JSONException e) {
+						e.printStackTrace();
 					}
 				} else {
 					toRemove.add(sd);
 				}
-			/*}else{
-				Bukkit.broadcastMessage(Chat.get().prefix + "Found invalid sign! Removing!");
-				sd.getLocation().getBlock().setType(Material.AIR);
-				toRemove.add(sd);
-			}*/
 		}
 		for (SignData sd : toRemove) {
 			sd.remove();
 		}
-	}
-
-	public Location convertLocation(String str) {
-		String[] args = str.split(":");
-		World world = Bukkit.getServer().getWorld(args[0]);
-		double x = convertDouble(args[1]);
-		double y = convertDouble(args[2]);
-		double z = convertDouble(args[3]);
-		return new Location(world, x, y, z);
 	}
 
 	public static SignData getSignByLocation(Location location) {
@@ -159,10 +129,6 @@ public class SignData {
 		return this.number;
 	}
 
-	public String getDate() {
-		return this.date;
-	}
-
 	public String getUsername() {
 		return this.username;
 	}
@@ -171,7 +137,7 @@ public class SignData {
 		return this.item;
 	}
 
-	public Location getLocation() {
+	public Location<World> getLocation() {
 		return this.location;
 	}
 
@@ -179,23 +145,16 @@ public class SignData {
 		return this.number;
 	}
 
-	private Double convertDouble(String str) {
-		return Double.parseDouble(str);
-	}
-
-	private Skull getSkull(Block block) {
-		Block b = block.getRelative(BlockFace.UP);
-		for (BlockFace face : Signs.BLOCKFACES) {
-			Block s = b.getRelative(face);
-			if ((s.getState() instanceof Skull)) {
-				return (Skull) s.getState();
-			}
-		}
-		return null;
+	private Optional<Location<World>> getSkull() {
+		Location<World> aboveSign = location.add(0, 1, 0);
+		if(aboveSign.getBlockType() == BlockTypes.SKULL)
+			return Optional.of(aboveSign);
+		return Optional.empty();
 	}
 
 	private String getMsg(String string) {
-		return Chat.get().getLanguage().getString(string);
+		String[] split = string.split(Pattern.quote("."));
+		return Chat.get().getLanguage().getNode(split).getString();
 	}
 
 }

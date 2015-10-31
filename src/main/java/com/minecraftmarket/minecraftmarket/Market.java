@@ -1,5 +1,6 @@
 package com.minecraftmarket.minecraftmarket;
 
+import com.google.inject.Inject;
 import com.minecraftmarket.minecraftmarket.command.CommandTask;
 import com.minecraftmarket.minecraftmarket.mcommands.Commands;
 import com.minecraftmarket.minecraftmarket.recentgui.RecentListener;
@@ -11,19 +12,20 @@ import com.minecraftmarket.minecraftmarket.signs.Signs;
 import com.minecraftmarket.minecraftmarket.util.Chat;
 import com.minecraftmarket.minecraftmarket.util.Log;
 import com.minecraftmarket.minecraftmarket.util.Settings;
-
 import lombok.Getter;
 import lombok.Setter;
-import net.gravitydevelopment.updater.Updater;
-
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.mcstats.MetricsLite;
+import ninja.leaping.configurate.ConfigurationNode;
+import org.spongepowered.api.Game;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.game.state.GameInitializationEvent;
+import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
+import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.service.command.CommandService;
 
 import java.io.File;
-import java.io.IOException;
 
-public class Market extends JavaPlugin {
+@Plugin(name = "MinecraftMarket", id = "minecraftmarket", version = Market.version)
+public class Market {
 	
     @Getter @Setter
 	private Long interval;
@@ -44,35 +46,41 @@ public class Market extends JavaPlugin {
 	private SignUpdate signUpdate;
     @Getter @Setter
     private String color;
+	@Inject
+	@Getter
+	public Game game;
+	@Inject
+	@Getter
+	private org.slf4j.Logger logger;
+	@Getter
+	public final static String version = "2.1.0";
 
-	@Override
-	public void onDisable() {
+	@Listener
+	public void onServerStop(GameStoppingServerEvent event) {
 		stopTasks();
 	}
 
-	@Override
-	public void onEnable() {
+	@Listener
+	public void onServerInit(GameInitializationEvent event) {
         plugin = this;
 		try {
 			registerCommands();
 			saveDefaultSettings();
 			registerEvents();
 			reload();
-			startMetrics();
 			startTasks();
 		} catch (Exception e) {
+			e.printStackTrace();
 			Log.log(e);
 		}
 	}
 
 	public void reload() {
 		try {
-            Settings.get().reloadConfig();
+            Settings.get().reloadMainConfig();
             Settings.get().reloadLanguageConfig();
             
 			loadConfigOptions();
-            if (update)
-                new Updater(this, 64572, this.getFile(), Updater.UpdateType.NO_DOWNLOAD, false);
 			if (authApi()) {
 				startGUI();
 				startSignTasks();
@@ -84,22 +92,22 @@ public class Market extends JavaPlugin {
 
 	private void loadConfigOptions() {
 		Chat.get().SetupDefaultLanguage();
-        FileConfiguration config = this.getConfig();
-        Api.setApi(config.getString("ApiKey", "Apikey here"));
-		this.interval = Math.max(config.getLong("Interval", 90L), 10L);
-		this.isGuiEnabled = config.getBoolean("Enabled-GUI", true);
-		this.shopCommand = config.getString("Shop-Command", "/shop");
-		this.update = config.getBoolean("auto-update", true);
-		this.isSignEnabled = config.getBoolean("Enabled-signs", true);
-        this.color = config.getString("Color", "&0");
-		Log.setDebugging(config.getBoolean("Debug", false));
+        ConfigurationNode config = Settings.get().getMainConfig();
+        Api.setApi(config.getNode("ApiKey").getString("Apikey here"));
+		this.interval = Math.max(config.getNode("Interval").getLong(90L), 10L);
+		this.isGuiEnabled = config.getNode("Enabled-GUI").getBoolean(true);
+		this.shopCommand = config.getNode("Shop-Command").getString("/shop");
+		this.update = config.getNode("auto-update").getBoolean(true);
+		this.isSignEnabled = config.getNode("Enabled-signs").getBoolean(true);
+		this.color = config.getNode("Color").getString("&0");
+		Log.setDebugging(config.getNode("Debug").getBoolean(false));
 	}
 
 	private void registerEvents() {
-		getServer().getPluginManager().registerEvents(new ShopListener(), this);
-		getServer().getPluginManager().registerEvents(new ShopCommand(), this);
-		getServer().getPluginManager().registerEvents(new SignListener(), this);
-		getServer().getPluginManager().registerEvents(new RecentListener(), this);
+		getGame().getEventManager().registerListeners(this, new ShopListener());
+		getGame().getEventManager().registerListeners(this, new ShopCommand());
+		getGame().getEventManager().registerListeners(this, new SignListener());
+		getGame().getEventManager().registerListeners(this, new RecentListener());
 	}
 
 	private boolean authApi() {
@@ -107,29 +115,20 @@ public class Market extends JavaPlugin {
 			getLogger().info("Using API Key: " + Api.getKey());
 			return true;
 		} else {
-			getLogger().warning("Invalid API Key! Use \"/MM APIKEY <APIKEY>\" to setup your APIKEY");
+			getLogger().warn("Invalid API Key! Use \"/MM APIKEY <APIKEY>\" to setup your APIKEY");
 			return false;
-		}
-	}
-
-	private void startMetrics() {
-		try {
-			MetricsLite metrics = new MetricsLite(this);
-			metrics.start();
-		} catch (IOException e) {
-			Log.log(e);
 		}
 	}
 
 	private void startGUI() {
 		if (isGuiEnabled) {
-			new ShopTask().runTaskLater(this, 20L);
+			game.getScheduler().createTaskBuilder().delayTicks(20).execute(new ShopTask()).submit(this);
 		}
 	}
 
 	private void runCommandChecker() {
 		commandTask = new CommandTask();
-		commandTask.runTaskTimerAsynchronously(this, 600L, interval * 20L);
+		game.getScheduler().createTaskBuilder().async().delayTicks(600L).intervalTicks(interval * 20L).execute(commandTask).submit(this);
 	}
 
 	private void startSignTasks() {
@@ -145,7 +144,8 @@ public class Market extends JavaPlugin {
 	}
 
 	private void registerCommands() {
-		getCommand("mm").setExecutor(new Commands());
+		CommandService commandService = getGame().getCommandDispatcher();
+		commandService.register(this, new Commands(), "mm");
 	}
 
 	private void saveDefaultSettings() {
@@ -154,15 +154,17 @@ public class Market extends JavaPlugin {
 
 	private void stopTasks() {
 		try {
-			signUpdate.cancel();
-			getServer().getScheduler().cancelTasks(this);
+			SignUpdate.task.cancel();
+			Market.getPlugin().getGame().getScheduler().getScheduledTasks(this).forEach(org.spongepowered.api.service.scheduler.Task::cancel);
 		} catch (Exception e) {
 			Log.log(e);
 		}
 	}
 
-    public File getPluginFile() {
-        return this.getFile();
-    }
-    
+	public File getDataFolder() {
+		File file = new File("./config/minecraftmarket/");
+		file.mkdirs();
+		return file;
+	}
+
 }

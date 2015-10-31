@@ -1,11 +1,8 @@
 package com.minecraftmarket.minecraftmarket.command;
 
 import java.util.List;
+import java.util.Optional;
 
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import com.minecraftmarket.minecraftmarket.json.JSONException;
 
 import com.google.common.collect.Lists;
@@ -13,11 +10,16 @@ import com.minecraftmarket.minecraftmarket.Api;
 import com.minecraftmarket.minecraftmarket.Market;
 import com.minecraftmarket.minecraftmarket.util.Json;
 import com.minecraftmarket.minecraftmarket.util.Log;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.property.SlotIndex;
+import org.spongepowered.api.item.inventory.type.OrderedInventory;
 
-public class CommandExecutor extends BukkitRunnable {
+public class CommandExecutor implements Runnable {
 
 	private String username;
-	private Player player;
+	private Optional<Player> player;
 	private String command;
 	private int delay;
 	private int slots;
@@ -34,7 +36,7 @@ public class CommandExecutor extends BukkitRunnable {
 		this.online = online;
 		this.slots = slots;
 
-		player = Bukkit.getServer().getPlayerExact(username);
+		player = Market.getPlugin().getGame().getServer().getPlayer(username);
 	}
 
 	public boolean hasRequiredSlots() {
@@ -45,19 +47,19 @@ public class CommandExecutor extends BukkitRunnable {
 				return false;
 			}
 			int available = 0;
-			for (ItemStack is : player.getInventory().getContents()) {
-				if (is == null) {
+			for(int i = 0; i < player.get().getInventory().size(); i++) {
+				if(!((OrderedInventory) player.get().getInventory()).peek(SlotIndex.of(i)).isPresent())
 					available++;
-				}
 			}
+
 			return available >= slots;
 		}
 	}
 
 	public boolean isPlayerOnline() {
 		if (online) {
-			player = Bukkit.getServer().getPlayerExact(username);
-			return player != null;
+			player = Market.getPlugin().getGame().getServer().getPlayer(username);
+			return player.isPresent();
 		}
 		return true;
 	}
@@ -98,7 +100,7 @@ public class CommandExecutor extends BukkitRunnable {
 		}
 		executed();
 		Log.debug("Command \"/" + command + "\" will be executed in " + delay + " seconds");
-		this.runTaskLaterAsynchronously(Market.getPlugin(), delay * 20);
+		Market.getPlugin().getGame().getScheduler().createTaskBuilder().async().delayTicks(delay * 20L).execute(this).submit(Market.getPlugin());
 	}
 
 	public void setPending() {
@@ -108,7 +110,7 @@ public class CommandExecutor extends BukkitRunnable {
 	@Override
 	public void run() {
 		Log.log("Executing \"/" + command + "\" on behalf of " + username);
-		Market.getPlugin().getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
+		Market.getPlugin().getGame().getCommandDispatcher().process(Market.getPlugin().getGame().getServer().getConsole(), command);
 	}
 
 }

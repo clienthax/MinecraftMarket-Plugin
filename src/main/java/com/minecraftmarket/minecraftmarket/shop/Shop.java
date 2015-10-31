@@ -8,14 +8,9 @@ import com.minecraftmarket.minecraftmarket.json.JSONObject;
 import com.minecraftmarket.minecraftmarket.util.Chat;
 import com.minecraftmarket.minecraftmarket.util.Json;
 import com.minecraftmarket.minecraftmarket.util.Log;
-
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.item.inventory.Inventory;
+import org.spongepowered.api.item.inventory.ItemStack;
 
 import java.util.Arrays;
 
@@ -23,6 +18,8 @@ public class Shop {
 	static Shop instance;
 	private Inventory guiHub;
 
+	//TODO
+	/*
 	public void setupGUI() {
 		createNewGui();
 	}
@@ -216,4 +213,5 @@ public class Shop {
 
 	private Shop() {
 	}
+	*/
 }

@@ -11,8 +11,6 @@ import com.minecraftmarket.minecraftmarket.util.Log;
 
 public class FetchCommand {
 
-	Market plugin = Market.getPlugin();
-
 	public void fetchPending() {
         String pending = "";
 		try {
@@ -63,9 +61,6 @@ public class FetchCommand {
 	}
 
 	private boolean forBoolean(int num) {
-		if (num == 1) {
-			return false;
-		}
-		return true;
+		return num != 1;
 	}
 }

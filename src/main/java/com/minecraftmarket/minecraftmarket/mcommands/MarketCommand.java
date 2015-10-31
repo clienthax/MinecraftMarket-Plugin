@@ -1,8 +1,8 @@
 package com.minecraftmarket.minecraftmarket.mcommands;
 
-import org.bukkit.command.CommandSender;
-
 import com.minecraftmarket.minecraftmarket.util.Chat;
+import ninja.leaping.configurate.ConfigurationNode;
+import org.spongepowered.api.util.command.CommandSource;
 
 public abstract class MarketCommand {
 
@@ -34,9 +34,13 @@ public abstract class MarketCommand {
 		return permission;
 	}
 
-	public abstract void run(CommandSender sender, String[] args);
+	public abstract void run(CommandSource sender, String[] args);
 
-	public String getMsg(String string) {
-		return Chat.get().getLanguage().getString(string);
+	public String getMsg(String... string) {
+		ConfigurationNode node = Chat.get().getLanguage();
+		for(String subnode : string) {
+			node = node.getNode(subnode);
+		}
+		return node.getString();
 	}
 }

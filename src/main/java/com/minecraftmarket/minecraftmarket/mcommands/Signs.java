@@ -1,11 +1,10 @@
 package com.minecraftmarket.minecraftmarket.mcommands;
 
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-
 import com.minecraftmarket.minecraftmarket.Market;
 import com.minecraftmarket.minecraftmarket.signs.SignUpdate;
 import com.minecraftmarket.minecraftmarket.util.Chat;
+import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.util.command.CommandSource;
 
 public class Signs extends MarketCommand {
 
@@ -14,9 +13,9 @@ public class Signs extends MarketCommand {
 	}
 
 	@Override
-	public void run(CommandSender sender, String[] args) {
-		Bukkit.getScheduler().runTaskAsynchronously(Market.getPlugin(), new SignUpdate());
-		sender.sendMessage(Chat.get().prefix + getMsg("messages.signs"));
+	public void run(CommandSource sender, String[] args) {
+		Market.getPlugin().getGame().getScheduler().createTaskBuilder().async().execute(new SignUpdate()).submit(Market.getPlugin());
+		sender.sendMessage(Texts.of(Chat.get().prefix + getMsg("messages", "signs")));
 		return;
 	}
 

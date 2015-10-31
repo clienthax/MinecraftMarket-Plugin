@@ -1,20 +1,18 @@
 package com.minecraftmarket.minecraftmarket.signs;
 
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
-
 import com.minecraftmarket.minecraftmarket.Market;
+import org.spongepowered.api.service.scheduler.Task;
 
-public class SignUpdate extends BukkitRunnable {
+public class SignUpdate implements Runnable {
 	
-	private static BukkitTask task;
+	public static Task task;
 	private boolean first;
 
 	public void startSignTask() {
 		first = true;
 		Signs.getSigns().updateJson();		
 		if (task != null) task.cancel();
-		task = this.runTaskTimer(Market.getPlugin(), 600L, Market.getPlugin().getInterval() * 20);
+		task = Market.getPlugin().getGame().getScheduler().createTaskBuilder().delayTicks(600L).intervalTicks(Market.getPlugin().getInterval() * 20L).execute(this).submit(Market.getPlugin());
 	}
     
 	@Override
@@ -27,14 +25,5 @@ public class SignUpdate extends BukkitRunnable {
 		Signs.getSigns().updateJson();
 		SignData.updateAllSigns();
 	}
-	
-	public class SignJson extends BukkitRunnable {
 
-		@Override
-		public void run() {
-			
-		}
-		
-		
-	}
 }

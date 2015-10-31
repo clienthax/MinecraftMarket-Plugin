@@ -1,11 +1,10 @@
 package com.minecraftmarket.minecraftmarket.shop;
 
-import org.bukkit.scheduler.BukkitRunnable;
-
-public class ShopTask extends BukkitRunnable {
+public class ShopTask implements Runnable {
 
 	public void run() {
-		Shop.getInstance().setupGUI();
+		//TODO
+		// Shop.getInstance().setupGUI();
 	}
 
 }

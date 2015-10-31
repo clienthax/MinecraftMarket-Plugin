@@ -1,9 +1,7 @@
 package com.minecraftmarket.minecraftmarket.util;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import com.minecraftmarket.minecraftmarket.Market;
+import org.slf4j.Logger;
 
 public class Log {
 
@@ -15,16 +13,12 @@ public class Log {
 		log = Market.getPlugin().getLogger();
 	}
 
-	public static void log(Level lvl, String msg) {
-		log.log(lvl, msg);
-	}
-
 	public static void log(String msg) {
-		log(Level.INFO, msg);
+		log.info(msg);
 	}
 
 	public static void log(Exception e) {
-		log(Level.WARNING, e.getMessage());
+		log.warn(e.getMessage());
 		if (debug) e.printStackTrace();
 	}
 

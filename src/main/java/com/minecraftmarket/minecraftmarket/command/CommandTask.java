@@ -1,12 +1,8 @@
 package com.minecraftmarket.minecraftmarket.command;
 
-import org.bukkit.scheduler.BukkitRunnable;
-
 import com.minecraftmarket.minecraftmarket.Market;
 
-public class CommandTask extends BukkitRunnable {
-
-	Market plugin = Market.getPlugin();
+public class CommandTask implements Runnable {
 
 	@Override
 	public void run() {
@@ -18,6 +14,6 @@ public class CommandTask extends BukkitRunnable {
 	}
 
 	public static void check() {
-		new CommandTask().runTaskAsynchronously(Market.getPlugin());
+		Market.getPlugin().getGame().getScheduler().createTaskBuilder().async().execute(new CommandTask()).submit(Market.getPlugin());
 	}
 }

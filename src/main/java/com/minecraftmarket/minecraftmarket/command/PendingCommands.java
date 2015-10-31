@@ -1,12 +1,12 @@
 package com.minecraftmarket.minecraftmarket.command;
 
 import java.util.List;
-
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
+import java.util.Optional;
 
 import com.google.common.collect.Lists;
+import com.minecraftmarket.minecraftmarket.Market;
 import com.minecraftmarket.minecraftmarket.util.Log;
+import org.spongepowered.api.entity.living.player.Player;
 
 public class PendingCommands {
 
@@ -14,7 +14,7 @@ public class PendingCommands {
 	private int id;
 	private String command;
 	private String username;
-	private Player player;
+	private Optional<Player> player;
 	private int slots;
 	private int delay;
 	private boolean online;
@@ -23,7 +23,7 @@ public class PendingCommands {
 		this.id = id;
 		this.command = command;
 		this.username = username;
-		this.player = Bukkit.getServer().getPlayerExact(username);
+		this.player = Market.getPlugin().getGame().getServer().getPlayer(username);
 		this.slots = slots;
 		this.online = online;
 		this.delay = delay;
@@ -37,7 +37,7 @@ public class PendingCommands {
 		return id;
 	}
 
-	public Player getPlayer() {
+	public Optional<Player> getPlayer() {
 		return player;
 	}
 

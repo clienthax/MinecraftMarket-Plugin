@@ -1,9 +1,9 @@
 package com.minecraftmarket.minecraftmarket.mcommands;
 
-import org.bukkit.command.CommandSender;
-
 import com.minecraftmarket.minecraftmarket.command.CommandTask;
 import com.minecraftmarket.minecraftmarket.util.Chat;
+import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.util.command.CommandSource;
 
 public class Check extends MarketCommand {
 	
@@ -12,9 +12,9 @@ public class Check extends MarketCommand {
 	}
 
 	@Override
-	public void run(CommandSender sender, String[] args) {
-		CommandTask.check();;
-		sender.sendMessage(Chat.get().prefix + getMsg("messages.check"));
+	public void run(CommandSource sender, String[] args) {
+		CommandTask.check();
+		sender.sendMessage(Texts.of(Chat.get().prefix + getMsg("messages", "check")));
 		return;
 		
 	}

@@ -21,8 +21,8 @@ public class Api {
 	
 	public static void setApi(String apiKey) {
 		APIKEY = apiKey;
-		Settings.get().getConfig().set("ApiKey", apiKey);
-		Settings.get().saveConfig();
+		Settings.get().getMainConfig().getNode("ApiKey").setValue(apiKey);
+		Settings.get().saveMainConfig();
 		Log.log("Using Apikey :" + APIKEY);
 	}
 

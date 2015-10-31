@@ -1,12 +1,7 @@
 package com.minecraftmarket.minecraftmarket.signs;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.block.BlockFace;
-import org.bukkit.event.Listener;
-import org.bukkit.scheduler.BukkitRunnable;
-
+import com.flowpowered.math.vector.Vector3d;
+import com.google.common.reflect.TypeToken;
 import com.minecraftmarket.minecraftmarket.json.JSONArray;
 import com.minecraftmarket.minecraftmarket.json.JSONObject;
 import com.minecraftmarket.minecraftmarket.Api;
@@ -14,10 +9,13 @@ import com.minecraftmarket.minecraftmarket.Market;
 import com.minecraftmarket.minecraftmarket.util.Json;
 import com.minecraftmarket.minecraftmarket.util.Log;
 import com.minecraftmarket.minecraftmarket.util.Settings;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
-public class Signs implements Listener {
+import java.util.List;
+import java.util.Optional;
 
-	public static final BlockFace[] BLOCKFACES = { BlockFace.SELF, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST };
+public class Signs {
 
 	private static JSONArray json;
 
@@ -33,23 +31,32 @@ public class Signs implements Listener {
 	private static Signs instance;
 
 	public void updateJson() {
-		new JsonUpdate().runTaskAsynchronously(Market.getPlugin());
+		Market.getPlugin().getGame().getScheduler().createTaskBuilder().async().execute(new JsonUpdate()).submit(Market.getPlugin());
 	}
 	
 	public void setup(){
-		for (String signInfo : Settings.get().getSignDatabase().getStringList("recent")) {
-			new SignData(convertLocation(signInfo), getNumber(signInfo));
+		try {
+			List<String> recents = Settings.get().getSignDatabase().getNode("recent").getList(new TypeToken<String>() {});
+			for (String signInfo : recents) {
+				Optional<Location<World>> worldLocation = convertLocation(signInfo);
+				if (worldLocation.isPresent())
+					new SignData(worldLocation.get(), getNumber(signInfo));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
-	public Location convertLocation(String str) {
+	public Optional<Location<World>> convertLocation(String str) {
 		String[] args = str.split(":");
-		World world = Bukkit.getServer().getWorld(args[0]);
+		Optional<World> world = Market.getPlugin().getGame().getServer().getWorld(args[0]);
+		if(!world.isPresent())
+			return Optional.empty();
 		double x = convertDouble(args[1]);
 		double y = convertDouble(args[2]);
 		double z = convertDouble(args[3]);
-		Location loc = new Location(world, x, y, z);
-		return loc;
+		Location<World> loc = new Location(world.get(), x, y, z);
+		return Optional.of(loc);
 	}
 
 	public int getNumber(String s) {
@@ -64,7 +71,7 @@ public class Signs implements Listener {
 		return Double.parseDouble(str);
 	}
 	
-	class JsonUpdate extends BukkitRunnable {
+	class JsonUpdate implements Runnable {
 
 		@Override
 		public void run() {

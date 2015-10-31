@@ -1,15 +1,8 @@
 package com.minecraftmarket.minecraftmarket.shop;
 
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-
-import com.minecraftmarket.minecraftmarket.util.Chat;
-
-public class ShopListener implements Listener {
-
+public class ShopListener {
+	//TODO
+/*
 	Shop gui = Shop.getInstance();
 
 	Chat chat = Chat.get();
@@ -18,7 +11,7 @@ public class ShopListener implements Listener {
 		return Chat.get().getLanguage().getString(string);
 	}
 
-	@EventHandler
+	@Listener
 	public void onInventoryClick(InventoryClickEvent event) {
 		try {
 			if (event.getInventory().getTitle().contains("Category: ") || event.getInventory().getTitle().contains("Categories")) {
@@ -61,5 +54,5 @@ public class ShopListener implements Listener {
 		} catch (Exception e1) {
 		}
 	}
-
+*/
 }

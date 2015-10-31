@@ -1,3 +1,4 @@
+/.gradle
 # Eclipse stuff
 /.classpath
 /.project
@@ -23,6 +24,7 @@
 # various other potential build files
 /build
 /bin
+/run
 /dist
 /manifest.mf
 

@@ -1,7 +1,0 @@
-name: MinecraftMarket
-main: com.minecraftmarket.minecraftmarket.Market
-version: ${version}
-website: http://www.minecraftmarket.com
-commands:
-    mm:
-        description: MinecraftMarket main command
