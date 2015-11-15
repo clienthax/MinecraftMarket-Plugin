@@ -6,7 +6,6 @@ import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
 import org.apache.commons.io.FileUtils;
-import org.apache.http.client.utils.HttpClientUtils;
 
 import java.io.File;
 import java.io.IOException;

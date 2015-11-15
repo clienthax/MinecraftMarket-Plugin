@@ -48,7 +48,7 @@ public class RecentUtil {
 			int amount = json.getJSONObject(num).getInt("price");
 			String currency = " " + json.getJSONObject(num).getString("currency");
 
-			ItemStack skull = Market.getPlugin().getGame().getRegistry().createItemBuilder().itemType(ItemTypes.SKULL).build();
+			ItemStack skull = Market.getPlugin().getGame().getRegistry().createBuilder(ItemStack.Builder.class).itemType(ItemTypes.SKULL).build();
 			skull.offer(Keys.DISPLAY_NAME, Texts.of(TextColors.GOLD, "Username: ", TextColors.GREEN, user));
 			ArrayList<String> lore = Lists.newArrayList();
 			lore.add("");

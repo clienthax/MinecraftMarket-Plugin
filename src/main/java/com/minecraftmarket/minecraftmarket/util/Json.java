@@ -32,7 +32,6 @@ public class Json {
 				return s.next();
 			}
 
-		} catch (MalformedURLException ex) {
 		} catch (IOException ex) {
 		}
 		return "";

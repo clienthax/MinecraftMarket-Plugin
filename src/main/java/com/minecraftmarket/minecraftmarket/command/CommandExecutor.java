@@ -81,9 +81,7 @@ public class CommandExecutor implements Runnable {
 	}
 
 	public static void clean() {
-		for (int id : executed) {
-			PendingCommands.remove(id);
-		}
+		executed.forEach(PendingCommands::remove);
 	}
 
 	public void execute() {

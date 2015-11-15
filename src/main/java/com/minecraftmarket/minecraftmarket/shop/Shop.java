@@ -54,7 +54,7 @@ public class Shop {
                         String colorID = Market.getPlugin().getColor();
                         if (colorID == null) {
                             colorID = "&0";
-                            Log.log("Could not retrieve color id from config.");
+                            Log.log("Could not retrieve color id from configurationNode.");
                         }
                         Log.log(colorID);
                         guiHub = createInventory(ChatColor.translateAlternateColorCodes('&', colorID + "Categories"), getInventorySize(categoryArray.length()));

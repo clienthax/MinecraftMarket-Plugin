@@ -352,7 +352,7 @@ public class JSONArray {
 	 */
 	public String join(String separator) throws JSONException {
 		int len = length();
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		for (int i = 0; i < len; i += 1) {
 			if (i > 0) {
@@ -601,7 +601,7 @@ public class JSONArray {
 	 * @return this.
 	 */
 	public JSONArray put(double value) throws JSONException {
-		Double d = new Double(value);
+		Double d = value;
 		JSONObject.testValidity(d);
 		put(d);
 		return this;
@@ -887,7 +887,7 @@ public class JSONArray {
 			return "[]";
 		}
 		int i;
-		StringBuffer sb = new StringBuffer("[");
+		StringBuilder sb = new StringBuilder("[");
 		if (len == 1) {
 			sb.append(JSONObject.valueToString(this.myArrayList.get(0), indentFactor, indent));
 		} else {

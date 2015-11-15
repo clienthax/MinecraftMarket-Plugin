@@ -41,7 +41,7 @@ public class ShopPackage {
 		this.currency = currency;
 		this.price = price;
 		this.description = description;
-		this.itemStack = Market.getPlugin().getGame().getRegistry().createItemBuilder().itemType(getMaterialType()).quantity(1).build();
+		this.itemStack = Market.getPlugin().getGame().getRegistry().createBuilder(ItemStack.Builder.class).itemType(getMaterialType()).quantity(1).build();
 		this.category = category;
 	}
 

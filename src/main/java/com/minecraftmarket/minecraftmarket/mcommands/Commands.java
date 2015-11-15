@@ -80,11 +80,7 @@ public class Commands implements CommandCallable {
 	private void sendHelp(CommandSource sender) {
 		sendMSG(sender, TextColors.WHITE,"---------------- ",TextColors.DARK_GREEN,"MinecraftMarket Help ",TextColors.WHITE,"-----------------");
 		sendMSG(sender, TextColors.GOLD, Market.getPlugin().getShopCommand(), " - ", TextColors.WHITE, "Show In-Game market to player");
-		for (MarketCommand mc : commands) {
-			if (!mc.getPermission().equals("") && sender.hasPermission(mc.getPermission())) {
-				sendMSG(sender, TextColors.GOLD, "/MM " + mc.getCommand() + " " + mc.getArgs() + " - ", TextColors.WHITE, mc.getDescription());
-			}
-		}
+		commands.stream().filter(mc -> !mc.getPermission().equals("") && sender.hasPermission(mc.getPermission())).forEach(mc -> sendMSG(sender, TextColors.GOLD, "/MM " + mc.getCommand() + " " + mc.getArgs() + " - ", TextColors.WHITE, mc.getDescription()));
 		sendMSG(sender, TextColors.WHITE, "----------------------------------------------------");
 	}
 
