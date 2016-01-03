@@ -5,14 +5,11 @@ import com.minecraftmarket.minecraftmarket.Market;
 import com.minecraftmarket.minecraftmarket.json.JSONException;
 import com.minecraftmarket.minecraftmarket.util.Chat;
 import com.minecraftmarket.minecraftmarket.util.Settings;
-import org.spongepowered.api.GameProfile;
 import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.data.value.mutable.ListValue;
-import org.spongepowered.api.service.user.UserStorage;
+import org.spongepowered.api.profile.GameProfile;
+import org.spongepowered.api.service.user.UserStorageService;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextStyles;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -64,7 +61,7 @@ public class SignData {
 		this.date = Signs.getJsonArray().getJSONObject(number).getString("date");
 		this.date = date.split(" ")[0];
 
-		Text[] texts = {Texts.of(TextStyles.UNDERLINE, getMsg("signs.header")), Texts.of(username), Texts.of(item), Texts.of(date) };
+		Text[] texts = {Text.of(TextStyles.UNDERLINE, getMsg("signs.header")), Text.of(username), Text.of(item), Text.of(date) };
 		ArrayList<Text> list = Lists.newArrayList(texts);
 		getLocation().offer(Keys.SIGN_LINES, list);
 		updateHead();
@@ -77,7 +74,7 @@ public class SignData {
 	public void updateHead() {
 		Optional<Location<World>> skullLocation = getSkull();
 		if (skullLocation.isPresent()) {
-			GameProfile owner = Market.getPlugin().getGame().getServiceManager().provide(UserStorage.class).get().get(username).get().getProfile();
+			GameProfile owner = Market.getPlugin().getGame().getServiceManager().provide(UserStorageService.class).get().get(username).get().getProfile();
 			skullLocation.get().offer(Keys.REPRESENTED_PLAYER, owner);
 		}
 	}
@@ -154,7 +151,7 @@ public class SignData {
 
 	private String getMsg(String string) {
 		String[] split = string.split(Pattern.quote("."));
-		return Chat.get().getLanguage().getNode(split).getString();
+		return Chat.get().getLanguage().getNode((Object[])split).getString();
 	}
 
 }

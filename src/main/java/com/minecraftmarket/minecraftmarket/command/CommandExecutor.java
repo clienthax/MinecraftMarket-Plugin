@@ -1,20 +1,17 @@
 package com.minecraftmarket.minecraftmarket.command;
 
-import java.util.List;
-import java.util.Optional;
-
-import com.minecraftmarket.minecraftmarket.json.JSONException;
-
 import com.google.common.collect.Lists;
 import com.minecraftmarket.minecraftmarket.Api;
 import com.minecraftmarket.minecraftmarket.Market;
+import com.minecraftmarket.minecraftmarket.json.JSONException;
 import com.minecraftmarket.minecraftmarket.util.Json;
 import com.minecraftmarket.minecraftmarket.util.Log;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.item.inventory.Inventory;
-import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.property.SlotIndex;
 import org.spongepowered.api.item.inventory.type.OrderedInventory;
+
+import java.util.List;
+import java.util.Optional;
 
 public class CommandExecutor implements Runnable {
 
@@ -108,7 +105,7 @@ public class CommandExecutor implements Runnable {
 	@Override
 	public void run() {
 		Log.log("Executing \"/" + command + "\" on behalf of " + username);
-		Market.getPlugin().getGame().getCommandDispatcher().process(Market.getPlugin().getGame().getServer().getConsole(), command);
+		Market.getPlugin().getGame().getCommandManager().process(Market.getPlugin().getGame().getServer().getConsole(), command);
 	}
 
 }

@@ -7,12 +7,12 @@ import com.minecraftmarket.minecraftmarket.json.JSONArray;
 import com.minecraftmarket.minecraftmarket.json.JSONObject;
 import com.minecraftmarket.minecraftmarket.util.Json;
 import com.minecraftmarket.minecraftmarket.util.Log;
-import org.spongepowered.api.GameProfile;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.service.user.UserStorage;
-import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.profile.GameProfile;
+import org.spongepowered.api.service.user.UserStorageService;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ public class RecentUtil {
 			String currency = " " + json.getJSONObject(num).getString("currency");
 
 			ItemStack skull = Market.getPlugin().getGame().getRegistry().createBuilder(ItemStack.Builder.class).itemType(ItemTypes.SKULL).build();
-			skull.offer(Keys.DISPLAY_NAME, Texts.of(TextColors.GOLD, "Username: ", TextColors.GREEN, user));
+			skull.offer(Keys.DISPLAY_NAME, Text.of(TextColors.GOLD, "Username: ", TextColors.GREEN, user));
 			ArrayList<String> lore = Lists.newArrayList();
 			lore.add("");
 			lore.add(TextColors.GOLD + "Package: " + TextColors.GREEN + packageName);
@@ -58,7 +58,7 @@ public class RecentUtil {
 			lore.add("");
 			lore.add(TextColors.GOLD + "Amount: " + TextColors.GREEN + amount + currency);
 			skull.toContainer().set(Keys.ITEM_LORE.getQuery(), lore);
-			GameProfile gameProfile = Market.getPlugin().getGame().getServiceManager().provide(UserStorage.class).get().get(user).get().getProfile();
+			GameProfile gameProfile = Market.getPlugin().getGame().getServiceManager().provide(UserStorageService.class).get().get(user).get().getProfile();
 			skull.toContainer().set(Keys.REPRESENTED_PLAYER, gameProfile);
 			return skull;
 		} catch (Exception e) {

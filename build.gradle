@@ -1,18 +1,6 @@
-buildscript {
-    repositories {
-        jcenter()
-        maven {
-            name = 'forge'
-            url = 'http://files.minecraftforge.net/maven'
-        }
-    }
-
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.0-SNAPSHOT'
-    }
+plugins {
+	id 'java'
 }
-
-apply plugin: 'net.minecraftforge.gradle.forge'
 
 defaultTasks 'clean', 'build'
 
@@ -21,15 +9,6 @@ targetCompatibility = '1.8'
 
 archivesBaseName = project.name.toLowerCase()
 version = project.version
-
-ext {
-    DIR_MCP_MAPPINGS = net.minecraftforge.gradle.common.Constants.DIR_MCP_MAPPINGS
-}
-
-minecraft {
-    forgeVersion = project.forgeVersion
-    mappings = project.mcpMappings
-}
 
 repositories {
     mavenCentral()
@@ -44,7 +23,8 @@ dependencies {
         transitive = true
     }
     compile 'junit:junit:4.12'
-	provided 'org.projectlombok:lombok:1.16.6'
+	compile 'org.projectlombok:lombok:1.16.6'
+	compile 'commons-io:commons-io:2.4'
 }
 
 if (JavaVersion.current().isJava8Compatible() || JavaVersion.current().isJava9Compatible()) {

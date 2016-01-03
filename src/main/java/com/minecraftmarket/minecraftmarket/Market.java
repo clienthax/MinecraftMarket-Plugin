@@ -16,11 +16,12 @@ import lombok.Getter;
 import lombok.Setter;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.command.CommandManager;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
-import org.spongepowered.api.service.command.CommandService;
+import org.spongepowered.api.scheduler.Task;
 
 import java.io.File;
 
@@ -144,7 +145,7 @@ public class Market {
 	}
 
 	private void registerCommands() {
-		CommandService commandService = getGame().getCommandDispatcher();
+		CommandManager commandService = getGame().getCommandManager();
 		commandService.register(this, new Commands(), "mm");
 	}
 
@@ -155,7 +156,7 @@ public class Market {
 	private void stopTasks() {
 		try {
 			SignUpdate.task.cancel();
-			Market.getPlugin().getGame().getScheduler().getScheduledTasks(this).forEach(org.spongepowered.api.service.scheduler.Task::cancel);
+			Market.getPlugin().getGame().getScheduler().getScheduledTasks(this).forEach(Task::cancel);
 		} catch (Exception e) {
 			Log.log(e);
 		}

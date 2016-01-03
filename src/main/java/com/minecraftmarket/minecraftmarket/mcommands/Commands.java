@@ -9,13 +9,12 @@ import com.google.common.collect.Lists;
 import com.minecraftmarket.minecraftmarket.Market;
 import com.minecraftmarket.minecraftmarket.util.Chat;
 import ninja.leaping.configurate.ConfigurationNode;
+import org.spongepowered.api.command.CommandCallable;
+import org.spongepowered.api.command.CommandException;
+import org.spongepowered.api.command.CommandResult;
+import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.util.command.CommandCallable;
-import org.spongepowered.api.util.command.CommandException;
-import org.spongepowered.api.util.command.CommandResult;
-import org.spongepowered.api.util.command.CommandSource;
 
 public class Commands implements CommandCallable {
 
@@ -74,7 +73,7 @@ public class Commands implements CommandCallable {
 	}
 
 	private void sendMSG(CommandSource sender, Object... msgs) {
-		sender.sendMessage(Texts.of(msgs));
+		sender.sendMessage(Text.of(msgs));
 	}
 
 	private void sendHelp(CommandSource sender) {
@@ -114,7 +113,7 @@ public class Commands implements CommandCallable {
 
 	@Override
 	public Text getUsage(CommandSource source) {
-		return Texts.of("/mm");
+		return Text.of("/mm");
 	}
 
 }
