@@ -9,8 +9,9 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
-import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.serializer.TextSerializers;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -33,15 +34,15 @@ public class SignListener {
 			org.spongepowered.api.data.manipulator.mutable.tileentity.SignData signDataSponge = event.getText();
 
 			if (signDataSponge.getValue(Keys.SIGN_LINES).isPresent()) {
-				String line0 = Texts.toPlain(signDataSponge.getValue(Keys.SIGN_LINES).get().get(0));
-				String line1 = Texts.toPlain(signDataSponge.getValue(Keys.SIGN_LINES).get().get(1));
-				String line2 = Texts.toPlain(signDataSponge.getValue(Keys.SIGN_LINES).get().get(2));
-				String line3 = Texts.toPlain(signDataSponge.getValue(Keys.SIGN_LINES).get().get(3));
+				String line0 = TextSerializers.PLAIN.serialize(signDataSponge.getValue(Keys.SIGN_LINES).get().get(0));
+				String line1 = TextSerializers.PLAIN.serialize(signDataSponge.getValue(Keys.SIGN_LINES).get().get(1));
+				String line2 = TextSerializers.PLAIN.serialize(signDataSponge.getValue(Keys.SIGN_LINES).get().get(2));
+				String line3 = TextSerializers.PLAIN.serialize(signDataSponge.getValue(Keys.SIGN_LINES).get().get(3));
 
 				if (line0.equalsIgnoreCase("[Recent]")) {
 
 					if (!player.hasPermission("minecraftmarket.admin")) {
-						player.sendMessage(Texts.of(TextColors.DARK_RED, Chat.get().getLanguage().getNode("signs", "no-permissions").getString()));
+						player.sendMessage(Text.of(TextColors.DARK_RED, Chat.get().getLanguage().getNode("signs", "no-permissions").getString()));
 						return;
 					}
 
@@ -52,7 +53,7 @@ public class SignListener {
 					} catch (NumberFormatException ex) {
 						//TODO
 						//event.getBlock().breakNaturally();
-						player.sendMessage(Texts.of(chat.prefix, TextColors.DARK_RED, "Wrong sign format"));
+						player.sendMessage(Text.of(chat.prefix, TextColors.DARK_RED, "Wrong sign format"));
 					}
 
 					Location<World> loc = event.getTargetTile().getLocation();
@@ -73,11 +74,11 @@ public class SignListener {
 							} catch (JSONException e) {
 								e.printStackTrace();
 							}
-							player.sendMessage(Texts.of(chat.prefix, TextColors.GREEN, Chat.get().getLanguage().getNode("signs", "created").getString()));
+							player.sendMessage(Text.of(chat.prefix, TextColors.GREEN, Chat.get().getLanguage().getNode("signs", "created").getString()));
 						}
 					} catch (JSONException e1) {
 						event.getTargetTile().getLocation().setBlock(BlockTypes.AIR.getDefaultState());
-						player.sendMessage(Texts.of(chat.prefix, TextColors.DARK_RED, "Invalid sign format! Couldn't find any purchases with id specified!"));
+						player.sendMessage(Text.of(chat.prefix, TextColors.DARK_RED, "Invalid sign format! Couldn't find any purchases with id specified!"));
 					}
 
 				}
@@ -94,9 +95,9 @@ public class SignListener {
 			if (sign != null) {
 				if (player.hasPermission("minecraftmarket.admin")) {
 					sign.remove();
-					player.sendMessage(Texts.of(chat.prefix, TextColors.RED, "Sign removed"));
+					player.sendMessage(Text.of(chat.prefix, TextColors.RED, "Sign removed"));
 				} else {
-					player.sendMessage(Texts.of(TextColors.DARK_RED, Chat.get().getLanguage().getNode("signs", "no-permissions").getString()));
+					player.sendMessage(Text.of(TextColors.DARK_RED, Chat.get().getLanguage().getNode("signs", "no-permissions").getString()));
 				}
 			}
 		}

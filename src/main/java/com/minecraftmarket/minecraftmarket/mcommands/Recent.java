@@ -2,8 +2,8 @@ package com.minecraftmarket.minecraftmarket.mcommands;
 
 
 import com.minecraftmarket.minecraftmarket.recentgui.RecentGUI;
+import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.util.command.CommandSource;
 
 public class Recent extends MarketCommand {
 

@@ -8,11 +8,10 @@ import com.minecraftmarket.minecraftmarket.Market;
 import com.minecraftmarket.minecraftmarket.util.Chat;
 import com.minecraftmarket.minecraftmarket.util.Log;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.item.Enchantment;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
@@ -48,7 +47,7 @@ public class ShopPackage {
 	public void create() {
 		try {
 			packages.add(this);
-			itemStack.offer(Keys.DISPLAY_NAME, Texts.of(TextStyles.RESET + "ID: " + id));
+			itemStack.offer(Keys.DISPLAY_NAME, Text.of(TextStyles.RESET + "ID: " + id));
 			createLore();
 			//TODO
 			/*

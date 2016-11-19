@@ -1,7 +1,7 @@
 package com.minecraftmarket.minecraftmarket.signs;
 
 import com.minecraftmarket.minecraftmarket.Market;
-import org.spongepowered.api.service.scheduler.Task;
+import org.spongepowered.api.scheduler.Task;
 
 public class SignUpdate implements Runnable {
 	

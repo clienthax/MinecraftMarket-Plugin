@@ -2,8 +2,8 @@ package com.minecraftmarket.minecraftmarket.mcommands;
 
 import com.minecraftmarket.minecraftmarket.Api;
 import com.minecraftmarket.minecraftmarket.util.Chat;
-import org.spongepowered.api.text.Texts;
-import org.spongepowered.api.util.command.CommandSource;
+import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.text.Text;
 
 public class Apikey extends MarketCommand {
 
@@ -16,12 +16,12 @@ public class Apikey extends MarketCommand {
 		String Apikey = args[0];
 		if (Apikey.matches("[0-9a-f]+") && Apikey.length() == 32) {
 			if (Api.authApikey(args[0])) {
-				sender.sendMessage(Texts.of(Chat.get().prefix + "Server authenticated with Minecraft Market."));
+				sender.sendMessage(Text.of(Chat.get().prefix + "Server authenticated with Minecraft Market."));
 				return;
 			}
 
 		}
-		sender.sendMessage(Texts.of(Chat.get().prefix + "Server did not authenticate, please check API-KEY."));
+		sender.sendMessage(Text.of(Chat.get().prefix + "Server did not authenticate, please check API-KEY."));
 		return;
 	}
 

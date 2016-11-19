@@ -2,7 +2,7 @@ package com.minecraftmarket.minecraftmarket.mcommands;
 
 import com.minecraftmarket.minecraftmarket.util.Chat;
 import ninja.leaping.configurate.ConfigurationNode;
-import org.spongepowered.api.util.command.CommandSource;
+import org.spongepowered.api.command.CommandSource;
 
 public abstract class MarketCommand {
 
