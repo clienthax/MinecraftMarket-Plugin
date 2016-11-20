@@ -9,6 +9,8 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
+import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.serializer.TextSerializers;
@@ -77,7 +79,7 @@ public class SignListener {
 							player.sendMessage(Text.of(chat.prefix, TextColors.GREEN, Chat.get().getLanguage().getNode("signs", "created").getString()));
 						}
 					} catch (JSONException e1) {
-						event.getTargetTile().getLocation().setBlock(BlockTypes.AIR.getDefaultState());
+						event.getTargetTile().getLocation().setBlock(BlockTypes.AIR.getDefaultState(),Cause.of(NamedCause.simulated(player)));
 						player.sendMessage(Text.of(chat.prefix, TextColors.DARK_RED, "Invalid sign format! Couldn't find any purchases with id specified!"));
 					}
 

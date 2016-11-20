@@ -12,8 +12,6 @@ import com.minecraftmarket.minecraftmarket.signs.Signs;
 import com.minecraftmarket.minecraftmarket.util.Chat;
 import com.minecraftmarket.minecraftmarket.util.Log;
 import com.minecraftmarket.minecraftmarket.util.Settings;
-import lombok.Getter;
-import lombok.Setter;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.command.CommandManager;
@@ -24,36 +22,27 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.scheduler.Task;
 
 import java.io.File;
+import org.slf4j.Logger;
+import org.spongepowered.api.Sponge;
 
 @Plugin(name = "MinecraftMarket", id = "minecraftmarket", version = Market.version)
 public class Market {
 	
-    @Getter @Setter
 	private Long interval;
-    @Getter @Setter
 	private String shopCommand;
 	private boolean update;
-    @Getter @Setter
 	private boolean isBoardEnabled;
-    @Getter @Setter
 	private boolean isSignEnabled;
-    @Getter @Setter
 	private boolean isGuiEnabled;
-    @Getter @Setter
 	private static Market plugin;
-    @Getter @Setter
 	private CommandTask commandTask;
-    @Getter @Setter
 	private SignUpdate signUpdate;
-    @Getter @Setter
-    private String color;
+        private boolean requireOnline;
+        private String color;
 	@Inject
-	@Getter
 	public Game game;
 	@Inject
-	@Getter
 	private org.slf4j.Logger logger;
-	@Getter
 	public final static String version = "2.1.0";
 
 	@Listener
@@ -100,6 +89,7 @@ public class Market {
 		this.shopCommand = config.getNode("Shop-Command").getString("/shop");
 		this.update = config.getNode("auto-update").getBoolean(true);
 		this.isSignEnabled = config.getNode("Enabled-signs").getBoolean(true);
+                this.requireOnline = config.getNode("Require-Player-Online").getBoolean(true);
 		this.color = config.getNode("Color").getString("&0");
 		Log.setDebugging(config.getNode("Debug").getBoolean(false));
 	}
@@ -167,5 +157,41 @@ public class Market {
 		file.mkdirs();
 		return file;
 	}
+        
+        public static Market getPlugin(){
+            return plugin;
+        }
+        
+        public Logger getLogger(){
+            return logger;
+        }
+        
+        public Game getGame(){
+            return Sponge.getGame();
+        }
+        
+        public String getShopCommand(){
+            return this.shopCommand;
+        }
+        
+        public boolean isGuiEnabled(){
+            return this.isGuiEnabled;
+        }
+        
+        public boolean isSignEnabled(){
+            return this.isSignEnabled;
+        }
+        
+        public static String getVersion(){
+            return version;
+        }
+        
+        public Long getInterval(){
+            return interval;
+        }
+        
+        public boolean requireOnline(){
+            return requireOnline;
+        }
 
 }

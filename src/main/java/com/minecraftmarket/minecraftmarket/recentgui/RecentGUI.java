@@ -2,6 +2,8 @@ package com.minecraftmarket.minecraftmarket.recentgui;
 
 import com.minecraftmarket.minecraftmarket.Market;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.item.inventory.Inventory;
 
 public class RecentGUI {
@@ -15,7 +17,7 @@ public class RecentGUI {
 //		inv = Bukkit.createInventory(null, 18, "Recent Donors");
 		RecentTask task = new RecentTask(inv);
 		Market.getPlugin().getGame().getScheduler().createTaskBuilder().async().execute(task).submit(Market.getPlugin());
-		player.openInventory(inv);
+		player.openInventory(inv,Cause.of(NamedCause.simulated(player)));
 	}
 
 	public Player getPlayer() {
