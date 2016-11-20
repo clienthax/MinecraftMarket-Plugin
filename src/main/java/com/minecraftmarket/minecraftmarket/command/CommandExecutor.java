@@ -30,8 +30,12 @@ public class CommandExecutor implements Runnable {
 		this.username = username;
 		this.command = command;
 		this.delay = delay;
-		this.online = online;
-		this.slots = slots;
+                if (!Market.getPlugin().requireOnline()) {
+                    this.online = online;
+                } else {
+                    this.online = true;
+                }
+            	this.slots = slots;
 
 		player = Market.getPlugin().getGame().getServer().getPlayer(username);
 	}
@@ -72,7 +76,7 @@ public class CommandExecutor implements Runnable {
 
 	public static void executeAllPending() {
 		for (PendingCommands pc : PendingCommands.getAll()) {
-			CommandExecutor executor = new CommandExecutor(pc.getId(), pc.getUsername(), pc.getCommand(), pc.getSlots(), pc.getDelay(), pc.isOnline());
+			CommandExecutor executor = new CommandExecutor(pc.getId(), pc.getUsername(), pc.getCommand().replace("{", "").replace("}", ""), pc.getSlots(), pc.getDelay(), pc.isOnline());
 			executor.execute();
 		}
 	}

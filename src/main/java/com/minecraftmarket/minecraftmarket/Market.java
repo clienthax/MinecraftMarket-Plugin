@@ -37,6 +37,7 @@ public class Market {
 	private static Market plugin;
 	private CommandTask commandTask;
 	private SignUpdate signUpdate;
+        private boolean requireOnline;
         private String color;
 	@Inject
 	public Game game;
@@ -88,6 +89,7 @@ public class Market {
 		this.shopCommand = config.getNode("Shop-Command").getString("/shop");
 		this.update = config.getNode("auto-update").getBoolean(true);
 		this.isSignEnabled = config.getNode("Enabled-signs").getBoolean(true);
+                this.requireOnline = config.getNode("Require-Player-Online").getBoolean(true);
 		this.color = config.getNode("Color").getString("&0");
 		Log.setDebugging(config.getNode("Debug").getBoolean(false));
 	}
@@ -186,6 +188,10 @@ public class Market {
         
         public Long getInterval(){
             return interval;
+        }
+        
+        public boolean requireOnline(){
+            return requireOnline;
         }
 
 }

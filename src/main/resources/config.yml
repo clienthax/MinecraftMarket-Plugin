@@ -34,3 +34,6 @@ Debug: false
 
 #Categories GUI title color
 Color: '&0'
+
+# Require the player to be online to execute commands
+Require-Player-Online: true
